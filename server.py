@@ -98,7 +98,7 @@ def Handle():
                     print(f'[WARNING]: {decodedReceivedNickname} tried to leak EXIT_INFO!')
                 else:
                     # Sending MSG to other clients
-                    BroadcastMSG(decodedReceivedMSG)
+                    BroadcastMSG(f'{decodedReceivedNickname}: {decodedReceivedMSG}')
 
 # Making threads
 while counter1 <= MAX_USERS:
