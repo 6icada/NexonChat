@@ -52,14 +52,55 @@ else:
 # Write function (To write and send MSGs)
 def Write():
     while True:
-        # userInput
+        # userInput (Input MSG to send to the server)
         userInput = input()
 
         # Checking userInput
-        if userInput == '/exit':
-            # sending userInput to the server
-            Client_Socket.send(userInput.encode('utf-8'))
-            exit()
+        if userInput[0] == '/':
+            if userInput == '/exit':
+                # Sending userInput to the server
+                Client_Socket.send(userInput.encode('utf-8'))
+                exit()
+            elif userInput == '/upload':
+                try:
+                    # Sending userInput to the server
+                    Client_Socket.send(userInput.encode('utf-8'))
+
+                    # userInput (Choose file to upload)
+                    userInputFile = input()
+
+                    # Opening file
+                    fileToOpen = open(f'{userInputFile}', 'r')
+                    dataToSend = fileToOpen.read()
+                    fileToOpen.close()
+
+                    # Sending dataToSend
+                    Client_Socket.send(dataToSend.encode('utf-8'))
+
+                    # Printing INFO
+                    print(f'[INFO]: File uploaded!')
+                except:
+                    # ERROR MSG
+                    print(f'[ERROR]: Can\'t upload file...')
+            elif userInput == '/download':
+                try:
+                    # Sending userInput to the server
+                    Client_Socket.send(userInput.encode('utf-8'))
+
+                    # Downloading File
+                    receivedDataForFile = Client_Socket.recv(10000000)
+                    decodedReceivedDataForFile = receivedDataForFile.decode('utf-8')
+
+                    # Storing decodedReceivedDataForFile
+                    fileToStore = open('fileToStore.txt', 'w')
+                    fileToStore.write(decodedReceivedDataForFile)
+                    fileToStore.close()
+
+                    # Printing INFO
+                    print(f'[INFO]: File downloaded!')
+                except:
+                    # ERROR MSG
+                    print(f'[ERROR]: Can\'t download file...')
         else:
             # Sending userInput to the server
             Client_Socket.send(userInput.encode('utf-8'))
