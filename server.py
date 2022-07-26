@@ -45,7 +45,7 @@ def Handle():
                         Client.send(msg.encode('utf-8'))
 
             # Receiving Nickname
-            receivedNickname = client.recv(1024)
+            receivedNickname = client.recv(16)
             decodedReceivedNickname = receivedNickname.decode('utf-8')
 
             # Checking decodedReceivedNickname
