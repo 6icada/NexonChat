@@ -76,26 +76,55 @@ def Handle():
                 decodedReceivedMSG = receivedMSG.decode('utf-8')
 
                 # Checking decodedReceivedMSG
-                if decodedReceivedMSG == '/exit':
-                    # Sending EXIT_INFO to the client (This MSG will turn off 'Receive' function on client side)
-                    client.send('//EXIT//'.encode('utf-8'))
+                if decodedReceivedMSG[0] == '/':
+                    if decodedReceivedMSG == '//EXIT//':
+                        # Sending WARNING INFO to the client
+                        client.send(f'[WARNING]: You can not do that!'.encode('utf-8'))
 
-                    # Removing client's INFO from lists
-                    nicknames.remove(decodedReceivedNickname)
-                    clients.remove(client)
+                        # Printing WARNING MSG
+                        print(f'[WARNING]: {decodedReceivedNickname} tried to leak EXIT_INFO!')
+                    elif decodedReceivedMSG == '/exit':
+                        # Sending EXIT_INFO to the client (This MSG will turn off 'Receive' function on client side)
+                        client.send('//EXIT//'.encode('utf-8'))
 
-                    # Printing INFO
-                    print(f'[INFO]: {decodedReceivedNickname} left!')
+                        # Removing client's INFO from lists
+                        nicknames.remove(decodedReceivedNickname)
+                        clients.remove(client)
 
-                    # Sending MSG to other clients
-                    BroadcastMSG(f'{decodedReceivedNickname} left!')
-                    break
-                elif decodedReceivedMSG == '//EXIT//': # EXIT_INFO leak protection
-                    # Sending WARNING INFO to the client
-                    client.send(f'[WARNING]: You can not do that!'.encode('utf-8'))
+                        # Printing INFO
+                        print(f'[INFO]: {decodedReceivedNickname} left!')
 
-                    # Printing WARNING MSG
-                    print(f'[WARNING]: {decodedReceivedNickname} tried to leak EXIT_INFO!')
+                        # Sending MSG to other clients
+                        BroadcastMSG(f'{decodedReceivedNickname} left!')
+                        break
+                    elif decodedReceivedMSG == '/upload':
+                        # Receiving File
+                        receivedDataForFile = client.recv(10000000)
+                        decodedReceivedDataForFile = receivedDataForFile.decode('utf-8')
+
+                        # Storing decodedReceivedDataForFile in File
+                        uploadedFile = open('uploadedFile.txt', 'w')
+                        uploadedFile.write(decodedReceivedDataForFile)
+                        uploadedFile.close()
+
+                        # Printing INFO
+                        print(f'[INFO]: {decodedReceivedNickname} uploaded file!')
+
+                        # Sending INFO to other clients
+                        BroadcastMSG(f'[INFO]: {decodedReceivedNickname} uploaded file!')
+                    elif decodedReceivedMSG == '/download':
+                        # Reading File
+                        toDownloadFile = open('uploadedFile.txt', 'r')
+                        dataToSend = toDownloadFile.read()
+
+                        # Sending dataToSend to the client
+                        client.send(dataToSend.encode('utf-8'))
+
+                        # Printing INFO
+                        print(f'[INFO]: {decodedReceivedNickname} downloaded file!')
+
+                        # Sending INFO to other clients
+                        BroadcastMSG(f'[INFO]: {decodedReceivedNickname} downloaded file!')
                 else:
                     # Sending MSG to other clients
                     BroadcastMSG(f'{decodedReceivedNickname}: {decodedReceivedMSG}')
