@@ -23,7 +23,7 @@ Client_Socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # Tring to connect to the server
 try:
-    Client_Socket.connect((HOST, PORT))
+    Client_Socket.connect((str(HOST), int(PORT)))
 except:
     # ERROR MSG
     print(f'[ERROR]: Can\'t find the server...')
