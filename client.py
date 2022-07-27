@@ -17,7 +17,7 @@ exitINFO = '//EXIT//'
 
 # Adding vars
 HOST = input('Enter IPv4: ')
-PORT = input()
+PORT = input('Enter port: ')
 Nickname = input('Enter nickname: ')
 Client_Socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
