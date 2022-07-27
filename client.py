@@ -101,6 +101,23 @@ def Write():
                 except:
                     # ERROR MSG
                     print(f'[ERROR]: Can\'t download file...')
+            elif userInput == '/help':
+                # INFO MSG
+                print('/upload    -- Upload file to server')
+                print('/download  -- Download file from server')
+                print('/exit      -- Exit the server')
+                print('/help      -- This MSG')
+            elif userInput == '//EXIT//':
+                # WARNING MSG
+                print('[WARNING]: You can not do that! You may demage server!')
+                print('[WARNING]: Disconnecting from server for server\'s security...')
+
+                # Disconnecting from the server
+                Client_Socket.send('/exit'.encode('utf-8'))
+                exit()
+            else:
+                # ERROR MSG
+                print(f'[ERROR]: Command does not exist...')
         else:
             # Sending userInput to the server
             Client_Socket.send(userInput.encode('utf-8'))
