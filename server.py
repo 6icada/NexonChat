@@ -5,6 +5,7 @@
 try:
     import socket
     import threading
+    from time import sleep as slp
 except:
     # ERROR MSG
     print(f'[ERROR]: Can\'t import libraries...')
@@ -66,8 +67,7 @@ def Handle():
             # Printing INFO
             print(f'[INFO]: {decodedReceivedNickname} joined!')
 
-            # Sending WELCOME MSG to the client
-            client.send(f'[WELCOME]: Welcome to the Nexon Server!Please do not spam...Have fun <3\n'.encode('utf-8'))
+            slp(0.2)
 
             # Sending USERS to the client
             if len(clients) == 5:
@@ -80,6 +80,9 @@ def Handle():
                 client.send(f'[USERS]: {nicknames[0]}, {nicknames[1]}'.encode('utf-8'))
             elif len(clients) == 1:
                 client.send(f'[USERS]: {nicknames[0]}'.encode('utf-8'))
+            else:
+                pass
+
 
             # Sending MSG to other clients
             BroadcastMSG(f'{decodedReceivedNickname} joined!')
