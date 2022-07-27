@@ -83,7 +83,6 @@ def Handle():
             else:
                 pass
 
-
             # Sending MSG to other clients
             BroadcastMSG(f'{decodedReceivedNickname} joined!')
 
