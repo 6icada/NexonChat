@@ -23,9 +23,15 @@ clients = []
 threads = []
 nicknames = []
 
-# Binding Server_Socket
-Server_Socket.bind((HOST, PORT))
-Server_Socket.listen()
+# Tring to listen
+try:
+    # Binding Server_Socket
+    Server_Socket.bind((HOST, PORT))
+    Server_Socket.listen()
+except:
+    # ERROR MSG
+    print('[ERROR]: Can\'t start server...')
+    exit()
 
 # MSG when server starts
 print(f'[START]: Server listening on {HOST}:{PORT}')
