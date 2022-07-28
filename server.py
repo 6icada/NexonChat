@@ -5,11 +5,18 @@
 try:
     import socket
     import threading
+    import os
     from time import sleep as slp
 except:
     # ERROR MSG
     print(f'[ERROR]: Can\'t import libraries...')
     exit()
+
+# Adding SysINFO Texts
+exitINFO = '//EXIT//'
+pyFileINFO = '//.py//'
+cFileINFO = '//.c//'
+txtFileINFO = '//.txt//'
 
 # Adding vars
 HOST = '0.0.0.0' # Change this if you want specific IPv4 address
@@ -100,7 +107,7 @@ def Handle():
 
                 # Checking decodedReceivedMSG
                 if decodedReceivedMSG[0] == '/':
-                    if decodedReceivedMSG == '//EXIT//':
+                    if decodedReceivedMSG == exitINFO:
                         # Sending WARNING INFO to the client
                         client.send(f'[WARNING]: You can not do that!'.encode('utf-8'))
 
@@ -108,7 +115,7 @@ def Handle():
                         print(f'[WARNING]: {decodedReceivedNickname} tried to leak EXIT_INFO!')
                     elif decodedReceivedMSG == '/exit':
                         # Sending EXIT_INFO to the client (This MSG will turn off 'Receive' function on client side)
-                        client.send('//EXIT//'.encode('utf-8'))
+                        client.send(exitINFO.encode('utf-8'))
 
                         # Removing client's INFO from lists
                         nicknames.remove(decodedReceivedNickname)
@@ -121,33 +128,115 @@ def Handle():
                         BroadcastMSG(f'{decodedReceivedNickname} left!')
                         break
                     elif decodedReceivedMSG == '/upload':
-                        # Receiving File
-                        receivedDataForFile = client.recv(10000000)
-                        decodedReceivedDataForFile = receivedDataForFile.decode('utf-8')
+                        # Receiving SysINFO about file
+                        dataAboutFile = client.recv(100)
+                        decodedDataAboutFile = dataAboutFile.decode('utf-8')
 
-                        # Storing decodedReceivedDataForFile in File
-                        uploadedFile = open('uploadedFile.txt', 'w')
-                        uploadedFile.write(decodedReceivedDataForFile)
-                        uploadedFile.close()
+                        # Checking decodedDataAboutFile
+                        if decodedDataAboutFile == pyFileINFO:
+                            # Receiving file
+                            receivedDataForFile = client.recv(10000000)
+                            decodedReceivedDataForFile = receivedDataForFile.decode('utf-8')
 
-                        # Printing INFO
-                        print(f'[INFO]: {decodedReceivedNickname} uploaded file!')
+                            # Storing decodedReceivedDataForFile in File
+                            uploadedFile = open('uploadedFile.py', 'w')
+                            uploadedFile.write(decodedReceivedDataForFile)
+                            uploadedFile.close()
 
-                        # Sending INFO to other clients
-                        BroadcastMSG(f'[INFO]: {decodedReceivedNickname} uploaded file!')
+                            # Printing INFO
+                            print(f'[INFO]: {decodedReceivedNickname} uploaded file!')
+
+                            # Sending INFO to other clients
+                            BroadcastMSG(f'[INFO]: {decodedReceivedNickname} uploaded file!')
+                        elif decodedDataAboutFile == cFileINFO:
+                            # Receiving file
+                            receivedDataForFile = client.recv(10000000)
+                            decodedReceivedDataForFile = receivedDataForFile.decode('utf-8')
+
+                            # Storing decodedReceivedDataForFile in File
+                            uploadedFile = open('uploadedFile.py', 'w')
+                            uploadedFile.write(decodedReceivedDataForFile)
+                            uploadedFile.close()
+
+                            # Printing INFO
+                            print(f'[INFO]: {decodedReceivedNickname} uploaded file!')
+
+                            # Sending INFO to other clients
+                            BroadcastMSG(f'[INFO]: {decodedReceivedNickname} uploaded file!')
+                        elif decodedDataAboutFile == txtFileINFO:
+                            # Receiving file
+                            receivedDataForFile = client.recv(10000000)
+                            decodedReceivedDataForFile = receivedDataForFile.decode('utf-8')
+
+                            # Storing decodedReceivedDataForFile in File
+                            uploadedFile = open('uploadedFile.py', 'w')
+                            uploadedFile.write(decodedReceivedDataForFile)
+                            uploadedFile.close()
+
+                            # Printing INFO
+                            print(f'[INFO]: {decodedReceivedNickname} uploaded file!')
+
+                            # Sending INFO to other clients
+                            BroadcastMSG(f'[INFO]: {decodedReceivedNickname} uploaded file!')
+                        else:
+                            # ERROR MSG
+                            print(f'[ERROR]: Did not recognize file...')
                     elif decodedReceivedMSG == '/download':
-                        # Reading File
-                        toDownloadFile = open('uploadedFile.txt', 'r')
-                        dataToSend = toDownloadFile.read()
+                        # Checking file
+                        if 'uploadedFile.py' in os.listdir():
+                            # Sending SysINFO to the client
+                            client.send(pyFileINFO.encode('utf-8'))
 
-                        # Sending dataToSend to the client
-                        client.send(dataToSend.encode('utf-8'))
+                            # Reading File
+                            toDownloadFile = open('uploadedFile.py', 'r')
+                            dataToSend = toDownloadFile.read()
 
-                        # Printing INFO
-                        print(f'[INFO]: {decodedReceivedNickname} downloaded file!')
+                            # Sending dataToSend to the client
+                            client.send(dataToSend.encode('utf-8'))
 
-                        # Sending INFO to other clients
-                        BroadcastMSG(f'[INFO]: {decodedReceivedNickname} downloaded file!')
+                            # Printing INFO
+                            print(f'[INFO]: {decodedReceivedNickname} downloaded file!')
+
+                            # Sending INFO to other clients
+                            BroadcastMSG(f'[INFO]: {decodedReceivedNickname} downloaded file!')
+                        elif 'uploadedFile.c' in os.listdir():
+                            # Sending SysINFO to the client
+                            client.send(cFileINFO.encode('utf-8'))
+
+                            # Reading File
+                            toDownloadFile = open('uploadedFile.c', 'r')
+                            dataToSend = toDownloadFile.read()
+
+                            # Sending dataToSend to the client
+                            client.send(dataToSend.encode('utf-8'))
+
+                            # Printing INFO
+                            print(f'[INFO]: {decodedReceivedNickname} downloaded file!')
+
+                            # Sending INFO to other clients
+                            BroadcastMSG(f'[INFO]: {decodedReceivedNickname} downloaded file!')
+                        elif 'uploadedFile.txt' in os.listdir():
+                            # Sending SysINFO to the client
+                            client.send(txtFileINFO.encode('utf-8'))
+
+                            # Reading File
+                            toDownloadFile = open('uploadedFile.txt', 'r')
+                            dataToSend = toDownloadFile.read()
+
+                            # Sending dataToSend to the client
+                            client.send(dataToSend.encode('utf-8'))
+
+                            # Printing INFO
+                            print(f'[INFO]: {decodedReceivedNickname} downloaded file!')
+
+                            # Sending INFO to other clients
+                            BroadcastMSG(f'[INFO]: {decodedReceivedNickname} downloaded file!')
+                        else:
+                            # ERROR MSG
+                            print(f'[ERROR]: Can\'t find file...')
+
+                            # Sending ERROR MSG to the client
+                            client.send(f'[ERROR]: Can\'t find file...'.encode('utf-8'))
                 else:
                     # Sending MSG to other clients
                     BroadcastMSG(f'{decodedReceivedNickname}: {decodedReceivedMSG}')
