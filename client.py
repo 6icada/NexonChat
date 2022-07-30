@@ -79,7 +79,7 @@ def Write():
                     userInputFile = input()
 
                     # Checking userInputFile
-                    if userInputFile[-3:] == '.py':
+                    if '.py' in userInputFile:
                         # Sending SysINFO  about file to the server
                         Client_Socket.send(pyFileINFO.encode('utf-8'))
 
@@ -97,7 +97,7 @@ def Write():
                         except:
                             # ERROR MSG
                             print(f'[ERROR]: Can\'t find file...')
-                    elif userInputFile[-2:] == '.c':
+                    elif '.c' in userInputFile:
                         # Sending SysINFO  about file to the server
                         Client_Socket.send(cFileINFO.encode('utf-8'))
 
@@ -115,7 +115,7 @@ def Write():
                         except:
                             # ERROR MSG
                             print(f'[ERROR]: Can\'t find file...')
-                    elif userInputFile[-4:] == '.txt':
+                    elif '.txt' in userInputFile:
                         # Sending SysINFO  about file to the server
                         Client_Socket.send(txtFileINFO.encode('utf-8'))
 
