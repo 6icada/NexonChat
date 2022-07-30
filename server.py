@@ -190,6 +190,7 @@ def Handle():
                             # Reading File
                             toDownloadFile = open('uploadedFile.py', 'r')
                             dataToSend = toDownloadFile.read()
+                            toDownloadFile.close()
 
                             # Sending dataToSend to the client
                             client.send(dataToSend.encode('utf-8'))
@@ -206,6 +207,7 @@ def Handle():
                             # Reading File
                             toDownloadFile = open('uploadedFile.c', 'r')
                             dataToSend = toDownloadFile.read()
+                            toDownloadFile.close()
 
                             # Sending dataToSend to the client
                             client.send(dataToSend.encode('utf-8'))
@@ -222,6 +224,7 @@ def Handle():
                             # Reading File
                             toDownloadFile = open('uploadedFile.txt', 'r')
                             dataToSend = toDownloadFile.read()
+                            toDownloadFile.close()
 
                             # Sending dataToSend to the client
                             client.send(dataToSend.encode('utf-8'))
