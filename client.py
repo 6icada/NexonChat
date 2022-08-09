@@ -14,9 +14,6 @@ except:
 nickIsAlreadyUsed = '[ERROR]: Nickname is already used...'
 youJoinedTheServer = '[INFO]: You joined the server!'
 exitINFO = '//EXIT//'
-pyFileINFO = '//.py//'
-cFileINFO = '//.c//'
-txtFileINFO = '//.txt//'
 
 # Adding vars
 HOST = input('Enter IPv4: ')
@@ -78,64 +75,20 @@ def Write():
                     # userInput (Choose file to upload)
                     userInputFile = input()
 
-                    # Checking userInputFile
-                    if '.py' in userInputFile:
-                        # Sending SysINFO  about file to the server
-                        Client_Socket.send(pyFileINFO.encode('utf-8'))
+                    try:
+                        # Opening file
+                        fileToOpen = open(f'{userInputFile}', 'r')
+                        dataToSend = fileToOpen.read()
+                        fileToOpen.close()
 
-                        try:
-                            # Opening file
-                            fileToOpen = open(f'{userInputFile}', 'r')
-                            dataToSend = fileToOpen.read()
-                            fileToOpen.close()
+                        # Sending dataToSend
+                        Client_Socket.send(dataToSend.encode('utf-8'))
 
-                            # Sending dataToSend
-                            Client_Socket.send(dataToSend.encode('utf-8'))
-    
-                            # Printing INFO
-                            print(f'[INFO]: File uploaded!')
-                        except:
-                            # ERROR MSG
-                            print(f'[ERROR]: Can\'t find file...')
-                    elif '.c' in userInputFile:
-                        # Sending SysINFO  about file to the server
-                        Client_Socket.send(cFileINFO.encode('utf-8'))
-
-                        try:
-                            # Opening file
-                            fileToOpen = open(f'{userInputFile}', 'r')
-                            dataToSend = fileToOpen.read()
-                            fileToOpen.close()
-
-                            # Sending dataToSend
-                            Client_Socket.send(dataToSend.encode('utf-8'))
-    
-                            # Printing INFO
-                            print(f'[INFO]: File uploaded!')
-                        except:
-                            # ERROR MSG
-                            print(f'[ERROR]: Can\'t find file...')
-                    elif '.txt' in userInputFile:
-                        # Sending SysINFO  about file to the server
-                        Client_Socket.send(txtFileINFO.encode('utf-8'))
-
-                        try:
-                            # Opening file
-                            fileToOpen = open(f'{userInputFile}', 'r')
-                            dataToSend = fileToOpen.read()
-                            fileToOpen.close()
-
-                            # Sending dataToSend
-                            Client_Socket.send(dataToSend.encode('utf-8'))
-    
-                            # Printing INFO
-                            print(f'[INFO]: File uploaded!')
-                        except:
-                            # ERROR MSG
-                            print(f'[ERROR]: Can\'t find file...')
-                    else:
+                        # Printing INFO
+                        print(f'[INFO]: File uploaded!')
+                    except:
                         # ERROR MSG
-                        print(f'[ERROR]: Did not recognize file...')
+                        print(f'[ERROR]: Can\'t find file...')
                 except:
                     # ERROR MSG
                     print(f'[ERROR]: Can\'t upload file...')
@@ -144,50 +97,17 @@ def Write():
                 Client_Socket.send(userInput.encode('utf-8'))
 
                 try:
-                    # Receiving SysINFO about file
-                    receivedDataForFile = Client_Socket.recv(100)
+                    # Downloading File
+                    receivedDataForFile = Client_Socket.recv(10000000)
                     decodedReceivedDataForFile = receivedDataForFile.decode('utf-8')
 
-                    # Checking decodedReceivedDataForFile
-                    if decodedReceivedDataForFile == pyFileINFO:
-                        # Downloading File
-                        receivedDataForFile = Client_Socket.recv(10000000)
-                        decodedReceivedDataForFile = receivedDataForFile.decode('utf-8')
+                    # Storing decodedReceivedDataForFile
+                    fileToStore = open('fileToStore', 'w')
+                    fileToStore.write(decodedReceivedDataForFile)
+                    fileToStore.close()
 
-                        # Storing decodedReceivedDataForFile
-                        fileToStore = open('fileToStore.py', 'w')
-                        fileToStore.write(decodedReceivedDataForFile)
-                        fileToStore.close()
-
-                        # Printing INFO
-                        print(f'[INFO]: File downloaded!')
-                    elif decodedReceivedDataForFile == cFileINFO:
-                        # Downloading File
-                        receivedDataForFile = Client_Socket.recv(10000000)
-                        decodedReceivedDataForFile = receivedDataForFile.decode('utf-8')
-
-                        # Storing decodedReceivedDataForFile
-                        fileToStore = open('fileToStore.c', 'w')
-                        fileToStore.write(decodedReceivedDataForFile)
-                        fileToStore.close()
-
-                        # Printing INFO
-                        print(f'[INFO]: File downloaded!')
-                    elif decodedReceivedDataForFile == txtFileINFO:
-                        # Downloading File
-                        receivedDataForFile = Client_Socket.recv(10000000)
-                        decodedReceivedDataForFile = receivedDataForFile.decode('utf-8')
-
-                        # Storing decodedReceivedDataForFile
-                        fileToStore = open('fileToStore.txt', 'w')
-                        fileToStore.write(decodedReceivedDataForFile)
-                        fileToStore.close()
-
-                        # Printing INFO
-                        print(f'[INFO]: File downloaded!')
-                    else:
-                        # Receiving MSG from server
-                        print(Client_Socket.recv(1000).decode('utf-8'))
+                    # Printing INFO
+                    print(f'[INFO]: File downloaded!')
                 except:
                     # ERROR MSG
                     print(f'[ERROR]: Can\'t download file...')
